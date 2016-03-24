@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # parameters
 dx = 0.05    # space resolution [m]
-dt = 1.0     # time resolution [day]
+dt = 9     # time resolution [day]
 D  = 2.5e-5  # dispersion coefficient [m2/day]
 u  = 0.005   # advection speed [m/day]
 
@@ -139,5 +139,5 @@ ax52.plot(wldx, PS_fdm_CN_up(wldx), '*-', label="CN-upstream")
 ax52.plot(wldx, PS_anal(wldx), 'o-', label="analytical")
 ax52.legend(loc='lower right')
 
-# plt.show()
-plt.close('all')
+plt.show()
+# plt.close('all')
