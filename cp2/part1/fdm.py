@@ -24,46 +24,40 @@ linstyles = ['-', '--', 'o-']
 colors = ['b', 'k', 'r']
 
 def main():
-    with open('compare.csv', 'w') as csvfile:
-        fieldnames = ['method', 'dt', 'dx', 't', 'change in storage',
-                      'flux out of the domain', 'diff', 'total_error']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-
-        # Question 1 (b)
-        c_explicit_upstream = finite_difference_c(dx, dt, u, D, tprint, writer,
-                                                  time_method="explicit",
+    # Question 1 (b)
+    c_explicit_upstream = finite_difference_c(dx, dt, u, D, tprint,
+                                              time_method="explicit",
                                                   space_method="upstream")
-        c_explicit_central = finite_difference_c(dx, dt, u, D, tprint, writer,
-                                                 time_method="explicit",
-                                                 space_method="central")
-        plot_c(tprint, c_explicit_central, c_explicit_upstream, "explicit")
-        saveresult(tprint, c_explicit_central, c_explicit_upstream, "explicit")
+    c_explicit_central = finite_difference_c(dx, dt, u, D, tprint,
+                                             time_method="explicit",
+                                             space_method="central")
+    plot_c(tprint, c_explicit_central, c_explicit_upstream, "explicit")
+    saveresult(tprint, c_explicit_central, c_explicit_upstream, "explicit")
 
-        # Question 1 (c)
-        # dt_unstable = 1./(2.*D/(dx**2)+u/dx) + 0.1
-        dt_unstable = 2
-        tprint_2 = [10*dt_unstable, 20*dt_unstable, 30*dt_unstable, 40*dt_unstable]
-        c_explicit_upstream_unstable = finite_difference_c(dx, dt_unstable, u, D, tprint_2, writer,
-                                                           time_method="explicit",
-                                                           space_method="upstream")
-        # c_explicit_upstream_unstable2 = finite_difference_c(dx, dt_unstable, u, D, tprint_2, writer,
-        #                                                     time_method="explicit",
-        #                                                     space_method="upstream_1st")
+    # Question 1 (c)
+    # dt_unstable = 1./(2.*D/(dx**2)+u/dx) + 0.1
+    dt_unstable = 2
+    tprint_2 = 10*[1*dt_unstable, 2*dt_unstable, 3*dt_unstable, 4*dt_unstable]
+    c_explicit_upstream_unstable = finite_difference_c(dx, dt_unstable, u, D, tprint_2,
+                                                       time_method="explicit",
+                                                       space_method="upstream")
+    plot_c_unstable(tprint_2, c_explicit_upstream_unstable, dt_unstable)
+    
+    # Question 2 (b)
+    c_CN_upstream = finite_difference_c(dx, dt, u, D, tprint,
+                                        time_method="Crank-Nicolson",
+                                        space_method="upstream")
+    c_CN_central = finite_difference_c(dx, dt, u, D, tprint,
+                                       time_method="Crank-Nicolson",
+                                       space_method="central")
+    plot_c(tprint, c_CN_central, c_CN_upstream, "Crank-Nicolson")
+    saveresult(tprint, c_CN_central, c_CN_upstream, "Crank-Nicolson")
 
-        plot_c_unstable(tprint_2, c_explicit_upstream_unstable)
+    # Question 3
+    check_mass_balance(tprint, c_explicit_upstream, c_explicit_central,
+                       c_CN_upstream, c_CN_central)
 
-        # Question 2 (b)
-        c_CN_upstream = finite_difference_c(dx, dt, u, D, tprint, writer,
-                                            time_method="Crank-Nicolson",
-                                            space_method="upstream")
-        c_CN_central = finite_difference_c(dx, dt, u, D, tprint, writer,
-                                           time_method="Crank-Nicolson",
-                                           space_method="central")
-        plot_c(tprint, c_CN_central, c_CN_upstream, "Crank-Nicolson")
-        saveresult(tprint, c_CN_central, c_CN_upstream, "Crank-Nicolson")
-
-        plt.show()
+    plt.show()
 
 def tridiag(a, b, c, n, k1=-1, k2=0, k3=1):
     a, b, c = a*np.ones(n-abs(k1)), b*np.ones(n-abs(k2)), c*np.ones(n-abs(k3))
@@ -156,7 +150,7 @@ def prepare_matrices(dx, dt, u, D, N, method_name):
 
     return [A, B, b]
 
-def finite_difference_c(dx, dt, u, D, tprint, writer, tmax=101.0,
+def finite_difference_c(dx, dt, u, D, tprint, tmax=101.0,
                         space_method="upstream", time_method="explicit"):
 
     # discretized x
@@ -197,9 +191,6 @@ def finite_difference_c(dx, dt, u, D, tprint, writer, tmax=101.0,
         raise Exception("Unknown method")
 
     print method_name
-    print A
-    print B
-    print b
     # loop
     t = 0.0
     c_old = np.matrix(c0).T
@@ -245,14 +236,23 @@ def plot_c(tprint, c_central, c_upstream, method):
         ax.set_title('Method: %s; Time: %s' % (method, str(tprint[i])))
         plt.savefig(method + "_" + str(tprint[i]) + ".png")
 
-def plot_c_unstable(tprint, c_unstable):
+def plot_c_unstable(tprint, c_unstable, dt_unstable):
     fig, axaar = plt.subplots(2, 2)
     c_unstable[0]
     axaar[0, 0].plot(x_pos, c_unstable[0])
+    axaar[0, 0].set_title('Time: %s; dt: %s' % (tprint[0], dt_unstable))
+    axaar[0, 0].set_ylabel('c(x)')
     axaar[0, 1].plot(x_pos, c_unstable[1])
+    axaar[0, 1].set_title('Time: %s; dt: %s' % (tprint[1], dt_unstable))
     axaar[1, 0].plot(x_pos, c_unstable[2])
+    axaar[1, 0].set_ylabel('c(x)')
+    axaar[1, 0].set_xlabel('x')
+    axaar[1, 0].set_title('Time: %s; dt: %s' % (tprint[2], dt_unstable))
     axaar[1, 1].plot(x_pos, c_unstable[3])
-    
+    axaar[1, 1].set_title('Time: %s; dt: %s' % (tprint[3], dt_unstable))
+    axaar[1, 1].set_xlabel('x')
+    plt.savefig('stable_check_dt' + '_' + str(dt_unstable) + ".png")
+
 
 def saveresult(tprint, c_central, c_upstream, method):
 
@@ -286,67 +286,30 @@ def saveresult(tprint, c_central, c_upstream, method):
                     'upstream':      '%.5f' % c_upstream_v[j]
                 })
 
+
+def check_mass_balance(t_set, c_explicit_upstream, c_explicit_central,
+                       c_CN_upstream, c_CN_central):
+    def calculate_mass(c):
+        m = 0
+        for i in xrange(len(c)-1):
+            m += (c[i]+c[i+1])/2*dx
+        return m
+
+    with open('partA_mass_balance_check.csv', 'w') as csvfile:
+        fieldnames = ['time', 'analytical', 'explicit-up', 'explicit-central',
+                      'CN-up', 'CN-central']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for i in xrange(len(t_set)):
+            writer.writerow({
+                'time':             '%d' % t_set[i],
+                'analytical':       '%.5f' % (cfeed*u*t_set[i]),
+                'explicit-up':      '%.5f' % calculate_mass(c_explicit_upstream[i]),
+                'explicit-central': '%.5f' % calculate_mass(c_explicit_central[i]),
+                'CN-up':            '%.5f' % calculate_mass(c_CN_upstream[i]),
+                'CN-central':       '%.5f' % calculate_mass(c_CN_central[i])
+            })
+
 if __name__ == "__main__":
     main()
-
-        # # plot if t is in tprint
-        # # and check the mass balance
-        # if ifin(t, tprint):
-        #     # calculate the analytical solution
-        #     # c_anal = analytical_c(x_pos, t)
-        #     c_anal = np.zeros(N)
-        #     # calculate the difference
-        #     error = c_anal - c_new
-        #     total_error = np.sqrt(np.mean(np.square(error)))
-        #     # plot
-        #     fig, ax = plt.subplots()
-        #     ax.plot(x_pos, c_new, linstyles[0], color=colors[0],
-        #             label="numerical")
-        #     ax.plot(x_pos, c_anal, linstyles[1], color=colors[1],
-        #             label="analytical")
-        #     # plot setting
-        #     ax.set_ylabel('c(x, t)')
-        #     ax.set_xlabel('x')
-        #     ax.set_ylim(0, 1)
-        #     ax.set_title('%s, Script_U = %s, Script_D = %s, delta_x = %s, t = %s' %
-        #                  (method_name, str(SU), str(SD), str(dx), str(t)))
-        #     ax.legend(loc='lower center', shadow=True)
-        #     filename = time_method + "_" + space_method + "_SD_" + str(SD) + "&dx_" + str(dx) + "&t_" + str(t)
-        #     plt.savefig( filename + ".png")
-
-        #     # check the mass balance
-        #     # assuming the cross section area A = 1
-        #     # also, we know that D = 1
-        #     m_change, m_out = 0, 0
-        #     for i in range(N):
-        #         m_change += dx * ((c_old[i+1]-c_new[i+1]) +
-        #                           (c_old[i]-c_new[i]))/2
-        #     m_out = dt * 1 * ((c_new[1]-c_new[0])/dx +
-        #                       (c_new[N-1]-c_new[N])/dx)
-        #     diff = m_change - m_out
-        #     print "*** Check the mass balance per unit area of the cross-section ***"
-        #     print "Method: %s" % method_name
-        #     print "dx: %.2f; dt: %.2f" % (dx, dt)
-        #     print "Time: %s (s): " % str(t)
-        #     print "Change in Storage: %.5f; Flux out of the domain: %.5f" \
-        #         % (m_change, m_out)
-        #     # write into the csvfile (writer)
-        #     writer.writerow({'method':                 method_name,
-        #                      'dt':                     "%.2f" % dt,
-        #                      'dx':                     "%.2f" % dx,
-        #                      't':                      "%.2f" % t,
-        #                      'change in storage':      "%.5f" % m_change,
-        #                      'flux out of the domain': "%.5f" % m_out,
-        #                      'diff':                   "%.5f" % diff,
-        #                      'total_error':            "%.5f" % total_error})
-
-        #     # # write the h into a csv file
-        #     # with open(filename + '.csv', 'w') as csvfile2:
-        #     #     fieldnames2 = ['x','analytical', 'numerical', 'error']
-        #     #     writer2 = csv.DictWriter(csvfile2, fieldnames=fieldnames2)
-        #     #     writer2.writeheader()
-        #     #     for i in xrange(N):
-        #     #         writer2.writerow({'x':          "%.2f" % x_pos[i],
-        #     #                           'analytical': "%.7f" % h_anal[i],
-        #     #                           'numerical':  "%.7f" % h_new_f[i],
-        #     #                           'error':      "%.7f" % error[i]})

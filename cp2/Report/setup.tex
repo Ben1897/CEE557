@@ -1,0 +1,162 @@
+\documentclass[11pt,letterpaper,titlepage]{article}
+% Template developed by:  Blake Landry (please do not remove this comment)
+% NOTE PREMABLE section that you should edit are between %-----   %---- comments
+%
+\usepackage{setspace} % to enable line spacing
+\setstretch{1.15} % set spacing to 1.25
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{cancel}
+\usepackage{natbib}
+\usepackage{verbatim}
+\usepackage{lastpage}
+\usepackage[svgnames]{xcolor}
+\usepackage{xspace} % need xspace for \val command
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{subfig} %\usepackage{subfigure} 
+% \usepackage{subfigure}
+\usepackage{fancyhdr} % for headers
+\usepackage{ upgreek }
+\usepackage{rotfloat}
+\usepackage{pdfpages}
+\usepackage{csvsimple}
+%\usepackage{mcode}
+\include{latexpython}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+
+\pgfsetlayers{background,main,foreground}
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt,drop shadow]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=8em, text centered, rounded corners, drop shadow, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=purple!20, node distance=3cm,
+    minimum height=2em,drop shadow]
+    \tikzstyle{texto} = [above, text width=8em, text centered]
+    \newcommand{\background}[5]{%
+      \begin{pgfonlayer}{background}
+        % Left-top corner of the background rectangle
+        \path (#1.west |- #2.north)+(-0.5,0.5) node (a1) {};
+        % Right-bottom corner of the background rectanle
+        \path (#3.east |- #4.south)+(+0.5,-0.25) node (a2) {};
+        % Draw the background
+        \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+          (a1) rectangle (a2);
+        \path (a1.east |- a1.south)+(0.8,-0.4) node (u1)[texto]
+          {\textit{Time Loop #5}};
+      \end{pgfonlayer}}
+
+% DEFINE HELPFUL MACROS (no need to edit)
+%for partial dervivatives
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+% To typeset a number with unit(s) using
+% the following syntax:  \val{3.0 \times 10^{8}}{m/s}
+% This gets the units to come out properly in roman characters,
+% even in math mode. The tilde stands for ``non breaking space'',
+% a space that cannot be used to end a line of text.
+\newcommand{\val}[2]{\ensuremath{#1~\mathrm{#2} \xspace}}% number plus unit
+% Another option to for units  (e.g., 10 \unit{$m^2/s$} )
+\newcommand{\unit}[1]{\ensuremath{\, \mathrm{#1}}}
+% The \eref{} macro properly formats a reference to an equation.
+% If you have labeled your equation with \label{eq:Walter}, then
+% you may refer to it with the code \eref{eq:Walter}
+\newcommand{\eref}[1]{\ensuremath{\mathrm{Eq.}\;(\ref{#1})}}
+\newcommand{\figref}[1]{\ensuremath{\mathrm{Figure}\;\ref{#1}}}
+\def\VR{\kern-\arraycolsep\strut\vrule &\kern-\arraycolsep}
+\def\vr{\kern-\arraycolsep & \kern-\arraycolsep}
+% END DEFINE HELPFUL MACROS 
+
+%----- Information for the Meta-data for the PDF (edit as needed)---------------------
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={CEE559 Fall 2015 Mini Project 3},    % title
+    pdfauthor={Dongchen Wang},     % author
+    pdfsubject={MiniProject Template},   % subject of the document
+    pdfcreator={Dongchen Wang},   % creator of the document
+    pdfproducer={Dongchen Wang}, % producer of the document
+    pdfkeywords={LaTeX Code}{Sediment Transport}{Sediment Sluicing From Reservoirs}, % list of keywords
+    pdfnewwindow=true,      % links in new window
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=black,          % color of internal links
+    citecolor=black,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=blue           % color of external links
+}
+%----- END Information for the Meta-data for the PDF ----------------------------------
+
+% Define custom LaTeX Syle called "myLaTeXstyle" (No need to Edit) 
+\lstdefinestyle{myLaTeXstyle}{
+basicstyle=\scriptsize\ttfamily, 
+language={[LaTeX]TeX},
+showstringspaces=false,
+numbersep=5pt,
+	stepnumber=2, 
+	numbers=left, 
+	numberstyle=\tiny, % number style
+breaklines=true,
+frame=shadowbox, 
+	framexleftmargin=0mm, 
+	xleftmargin=0mm,
+	prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+	backgroundcolor=\color{gray!5},
+	frameround=fttt,
+rulecolor=\color{black},
+morekeywords={includegraphics, graphicspath, maketitle, eqref},
+keywordstyle=\color[rgb]{0,0,1},                    % keywords
+        commentstyle=\color[rgb]{0.133,0.545,0.133},    % comments
+        stringstyle=\color[rgb]{0.627,0.126,0.941},  % strings
+escapeinside={(*@}{@*)},
+columns=fullflexible   
+}%
+%END Define custom LaTeX Syle called "myLaTeXstyle" 
+
+%--------- ADD Figure PATH (EDIT as needed) ------------------------------------------ 
+% e.g.,   \graphicspath{{figures/}{figures/trial_figures/}}
+\graphicspath{{figures/}} % this is the path for all figures
+%--------- END Add Figure path -------------------------------------------------------
+
+%-------------- Homework Specific Information (Edit accordingly) ----------------------
+\newcommand{\reportTitle}{CEE 557 Groundwater Modeling}
+\newcommand{\reportSubTitle}{COMPUTER PROBLEM \#2}
+\newcommand{\reportDueDate}{Wednesday, March 30, 2016}
+\newcommand{\reportClass}{CEE557  Groundwater Modeling}
+\newcommand{\reportClassShort}{CEE557}
+\newcommand{\reportClassTime}{03:00 PM}
+\newcommand{\reportClassInstructor}{Presented to Prof. Albert Valocchi}
+\newcommand{\reportAuthorName}{Peishi Jiang, Dongchen Wang}
+\newcommand{\reportGroupName}{}
+\newcommand{\reportGroupMembers}{} 
+% short versions of names
+\newcommand{\reportAuthorNameShort}{P. Jiang \& D. Wang}
+\newcommand{\reportTitleShort}{Computer Problem 2}
+\newcommand{\reportGroupNameShort}{}
+%-------------- END Homework Specific Information-----------------------------------
+
+%Formating the Header and footer information
+\lhead{\reportClassShort \\ \reportTitleShort}
+\chead{\reportDueDate}
+\rhead{\reportAuthorNameShort}
+%\lfoot{Group 5}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Information for the Title Page
+\title{\textbf{\reportTitle}\\ \vspace{0.1in} \Large \textit{\reportSubTitle}\\ \vspace{0.1in}}
+\author{Author:\\ \reportAuthorName \vspace{1.5in}\\ \reportClassInstructor \vspace{2.5in}}
+\date{\reportDueDate}

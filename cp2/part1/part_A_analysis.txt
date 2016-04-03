@@ -1,0 +1,35 @@
+1(a) For phase error (P.E.), it can be observed from the figure that
+the small wavelengths of both the two methods lag far behind the
+analytical solution while there is almost no phase error for large
+wavelengths. Also, despite a little difference in small wavelengths
+between the two methods, the two P.E. curves are almost identical.
+
+However, the amplification ratio (A.R.) values of the two methods are
+quite different, especially for small wavelengths. The figure shows
+that for small wavelengths, the amplification factors of the central
+method are almost three times as that of the analytical
+solution (A.R. ~ 3.0). Meanwhile, for the upstream method, the
+A.R. values are almost zeros for small wavelengths. Nevertheless, both
+of the two methods converge to 1.0 as wavelength increases.
+
+1(b) Both the results simulated at T=50 and T=100 show that compared
+with the analytical solutions, the numerical results of the central
+methods generate oscillations while numerical dispersions occur in the
+upstream method.
+
+These results are compatible with the Fourier analysis of part (a). As
+shown in part (a), the A.R. values of the central method are around 3
+for small wavelengths, causing the numerical oscillation behaviors
+shown in the figure. Also, the low A.R. values of the upstream method
+for small wavelengths result in the numerical dispersion of the
+numerical solutions.
+
+2(a) The A.R. and P.E. values of the Crank Nicolson method are almost
+the same as that of the explicit method for the central and upstream
+differences.
+
+(b) Similar to the comparisons of the explicit method discussed in
+part 1(b), for Crank Nicolson method, the upstream difference causes
+numerical dispersions and the central difference induces numerical
+oscillations. It complies with the Fourier analysis shown in part
+2(a), as discussed in part 1(b).

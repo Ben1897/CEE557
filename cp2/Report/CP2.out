@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Part A \205 Finite Difference Methods}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Explicit Finite Difference Solutions}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{AR and PE plots}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{Numerical solutions versus analytical solutions}{subsection.1.1}% 4
+\BOOKMARK [3][-]{subsubsection.1.1.3}{Stability examination with different t}{subsection.1.1}% 5
+\BOOKMARK [2][-]{subsection.1.2}{Crank-Nicolson Solutions}{section.1}% 6
+\BOOKMARK [3][-]{subsubsection.1.2.1}{AR and PE plots}{subsection.1.2}% 7
+\BOOKMARK [3][-]{subsubsection.1.2.2}{Numerical solutions versus analytical solutions}{subsection.1.2}% 8
+\BOOKMARK [2][-]{subsection.1.3}{Mass Balance Analysis}{section.1}% 9
+\BOOKMARK [1][-]{section.2}{Part B \205 Finite Element Methods for Solute Transport Problems}{}% 10
+\BOOKMARK [1][-]{appendix.A}{Python code for Part A}{}% 11

@@ -1,0 +1,55 @@
+\input{setup.tex}
+
+\setlength\parindent{0pt}
+\begin{document}
+\maketitle % sets the title page
+\pagenumbering{roman}
+\tableofcontents
+\newpage 
+%\section*{Acknowledgment}
+
+
+
+
+
+\pagenumbering{arabic}
+\pagestyle{fancy}
+
+
+The purpose of this assignment is to analyze and compare numerical solutions to the 1D solute transport equation. This problem is divided into two parts: Part A covers finite difference methods; Part B covers finite element methods. You should work in teams, as in the first computer assignment sd.
+
+The model problem is:
+\begin{equation} 
+  \label{eq:1}
+  \frac{\partial c}{\partial t} = D\frac{\partial^2 c}{\partial^2 x}-u\frac{\partial c}{\partial x}
+\end{equation}
+
+The initial and boundary conditions are:
+\begin{subequations}
+  \begin{equation} 
+    \label{eq:2a}
+    c(x,0)=0 
+  \end{equation}
+  \begin{equation} 
+    \label{eq:2b}
+    (uc-D\frac{\partial c}{\partial x})_{x=0}=uc_{Feed}, c_{Feed}=1.0
+  \end{equation}
+  \begin{equation} 
+    \label{eq:2c}
+    c(x -> \infty, t)=0
+  \end{equation}
+\end{subequations}
+
+\input{Part1.tex}
+\input{Part2.tex}
+
+
+\input{Appendix}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
